@@ -7,5 +7,5 @@ Forked from [PyBullet Gymperium](https://github.com/benelot/pybullet-gym) on 25/
 
 Environment Name | Implemented
 ---------|---------
-| **Mobile Robot** |
+| **Mobile Robots** |
 SimpleDrivingEnv-v0          | Yes
