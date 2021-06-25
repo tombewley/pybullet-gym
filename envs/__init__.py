@@ -1,5 +1,12 @@
 from gym.envs.registration import register
 
+register(
+    id="SimpleDriving-v0", 
+    entry_point="pybulletgym.envs.mobile_robots.envs:SimpleDrivingEnv",
+	)
+
+# =================================================
+
 # roboschool envs
 ## pendula
 register(
