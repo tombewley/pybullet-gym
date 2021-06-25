@@ -5,8 +5,8 @@ import os
 
 
 class Car(Object):
-    def __init__(self, client, basePosition, baseOrientation):
-        super(Car, self).__init__(client, "simplecar.urdf", basePosition, baseOrientation)
+    def __init__(self, client, basePosition, baseRotation):
+        super(Car, self).__init__(client, "simplecar.urdf", basePosition, baseRotation)
         # Joint indices as found by p.getJointInfo()
         self.steering_joints = [0,2]
         self.drive_joints = [1,3,4,5]

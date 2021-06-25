@@ -10,7 +10,10 @@ import matplotlib.pyplot as plt
 class SimpleDrivingEnv(gym.Env):
     metadata = {'render.modes': ['human', 'rgb_array']}
 
-    def __init__(self, gui=False):
+    def __init__(self, 
+                 gui=False,
+                 obstacles=[(-3,-3),(-3,3),(3,-3),(3,3)]
+                 ):
         self.client = p.connect(p.GUI if gui else p.DIRECT)
         self.action_space = gym.spaces.box.Box(
             low=np.array([-0.25, -.6], dtype=np.float32),
@@ -18,6 +21,7 @@ class SimpleDrivingEnv(gym.Env):
         self.observation_space = gym.spaces.box.Box(
             low=np.array([-10, -10, -1, -1, -5, 5, 0, -math.pi], dtype=np.float32),
             high=np.array([10, 10, 1, 1, -5, 5, 20, math.pi], dtype=np.float32))
+        self.obstacles = obstacles
         self.dt = 1/30
         p.setTimeStep(self.dt, self.client)
         self.rendered_img = None
@@ -39,13 +43,15 @@ class SimpleDrivingEnv(gym.Env):
         # Pick a random orientation for the car.
         ori = 2*np.pi*np.random.rand()
         # Load car and passive objects.
-        self.car = Car(self.client, basePosition=[0,0,0.1], baseOrientation=[0,0,ori,1])
+        self.car = Car(self.client, basePosition=[0,0,0.1], baseRotation=[0,0,ori])
         Object(self.client, "simpleplane.urdf")
         Object(self.client, "simplegoal.urdf", basePosition=self.goal)
-        # Object(self.client, "obstacle.urdf", basePosition=[3,3,0])
-        # Object(self.client, "obstacle.urdf", basePosition=[-3,3,0])
-        # Object(self.client, "obstacle.urdf", basePosition=[3,-3,0])
-        # Object(self.client, "obstacle.urdf", basePosition=[-3,-3,0])
+        Object(self.client, "wall.urdf", basePosition=[0,-10,0])
+        Object(self.client, "wall.urdf", basePosition=[0,10,0])
+        Object(self.client, "wall.urdf", basePosition=[-10,0,0], baseRotation=[0,0,np.pi/2])
+        Object(self.client, "wall.urdf", basePosition=[10,0,0], baseRotation=[0,0,np.pi/2])
+        for x, y in self.obstacles:
+            Object(self.client, "obstacle.urdf", basePosition=[x,y,0])
         # Get observation to return
         obs = self.get_observation()
         self.prev_dist_to_goal = obs[-2]

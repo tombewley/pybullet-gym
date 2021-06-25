@@ -8,12 +8,12 @@ class Object:
         client, 
         path:str, 
         basePosition:list=[0,0,0], 
-        baseOrientation:list=[0,0,0,1],
+        baseRotation:list=[0,0,0],
         ):
         self.client = client
         self.id = p.loadURDF(
             fileName=os.path.join(os.path.dirname(__file__), path),
             basePosition=basePosition,
-            baseOrientation=baseOrientation,
+            baseOrientation=p.getQuaternionFromEuler(baseRotation),
             physicsClientId=self.client
             )
